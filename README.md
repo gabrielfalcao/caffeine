@@ -29,3 +29,8 @@ $ make python-deps
 $ pip install -r development.txt
 $ python setup.py develop
 ```
+
+
+## Ideas so far
+
+![diagram1.png](diagram1.png)
