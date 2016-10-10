@@ -1,0 +1,8 @@
+*.pyc
+/.vagrant/
+*~
+.coverage
+*#*
+.*#*
+inbox/*
+tunetank.egg-info

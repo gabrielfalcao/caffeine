@@ -1,0 +1,7 @@
+venv_path: /srv/venv
+frontend_static_path: /srv/src/caffeine/static
+# "application_env" is in the vault
+
+#  each upload can take up to 10 minutes
+gunicorn_timeout: 600
+total_web_workers: 32

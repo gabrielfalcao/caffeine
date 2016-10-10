@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+        <title>caffeine admin</title>
+        <link rel="icon" type="image/x-icon" href="/dist/favicon.ico">
+        <link rel="stylesheet" type="text/css" media="screen" href="/dist/ionicons/css/ionicons.min.css">
+        <style>
+         body, center {
+           font-family: "Helvetica Neue", "Helvetica", "Arial";
+         }
+         body {
+           background-color: #333;
+           color: #fff;
+         }
+         .main {
+           padding-top: 100px;
+           text-align: center;
+         }
+        </style>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83260600-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+    </head>
+    <body>
+        <div class="main">
+            <img src="/dist/logo-320.png" />
+
+            <br />
+            <br />
+            <br />
+
+            {% if user %}
+            <h1>UNAUTHORIZED GMAIL ACCOUNT: {{ user.email }}</h1>
+
+            <p>
+              <img src="{{ user.avatar }}" width="320" height="320" />
+            </p>
+            <h3>you will be contacted</h3>
+            {% else %}
+            <h1>UNAUTHORIZED ACCESS</h1>
+            <strong>This attempt will be logged.</strong>
+            {% endif %}
+
+        </div>
+    </body>
+</html>

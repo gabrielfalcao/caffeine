@@ -1,0 +1,3 @@
+root_domain_tls_cert_path:  /etc/ssl/certs/caffeine.co.cert
+root_domain_tls_key_path:  /etc/ssl/certs/caffeine.co.key
+root_domain_ca_bundle_path:  /etc/ssl/certs/caffeine.co.ca-bundle.cert

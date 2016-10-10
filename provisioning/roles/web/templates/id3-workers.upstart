@@ -1,0 +1,16 @@
+description     "caffeine app"
+author          "Gabriel Falcao <gabriel@nacaolivre.org>"
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+respawn
+respawn limit 5 60
+
+{% for key, value in application_env.items() %}env {{ key }}={{ value }}
+{% endfor %}
+env PYTHONPATH="/srv/src"
+
+chdir /srv/src/pipelines
+
+exec {{ venv_path }}/bin/caffeine workers --pull-bind-address={{ application_env.WORKER_ADDRESS }} --concurrency=16 id3-extractor

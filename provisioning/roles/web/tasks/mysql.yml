@@ -1,0 +1,10 @@
+- name: setup database user
+  mysql_db: name="{{ caffeine_mysql_db }}" state=present
+
+- name: setup database user
+  mysql_user: name="{{ caffeine_mysql_user }}" password="{{ caffeine_mysql_password }}" priv=*.*:ALL state=present
+
+- name: run migrations
+  shell: "{{ venv_path }}/bin/alembic -c /srv/src/alembic.ini upgrade head"
+  args:
+    chdir: /srv/src

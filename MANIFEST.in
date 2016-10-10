@@ -1,0 +1,1 @@
+include COPYING *.md caffeine/static caffeine/static/* caffeine/static/dist caffeine/static/dist/* caffeine/static/templates caffeine/static/templates/* ez_setup.py

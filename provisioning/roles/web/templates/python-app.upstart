@@ -1,0 +1,25 @@
+description     "caffeine app"
+author          "Gabriel Falcao <gabriel@nacaolivre.org>"
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+respawn
+respawn limit 5 60
+
+{% for key, value in application_env.items() %}env {{ key }}={{ value }}
+{% endfor %}
+
+chdir /srv/src
+
+exec {{ venv_path }}/bin/gunicorn \
+     --capture-output \
+     --error-logfile /var/log/python-app.error.log \
+     --access-logfile /var/log/python-app.access.log \
+     --log-level debug \
+     --workers {{ total_web_workers }} \
+     --timeout={{ gunicorn_timeout }}\
+     --graceful-timeout={{ gunicorn_timeout }}\
+     --chdir /srv/src \
+     -b 0.0.0.0:4000 \
+     caffeine.application:server

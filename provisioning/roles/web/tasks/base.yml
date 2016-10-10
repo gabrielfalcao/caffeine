@@ -1,0 +1,79 @@
+- name: "installing python dependencies"
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items:
+    - python-pip
+    - python-dev
+    - python-virtualenv
+    - mysql-client
+    - libmysqlclient-dev
+
+
+- name: copy backend app
+  synchronize: src="{{ local_repository_root_path }}" dest="/srv/src" recursive=yes
+  notify: restart python-app
+  tags:
+    - backend
+    - frontend
+    - static
+
+- name: fix permissions
+  shell: "chown -R www-data: /srv/src"
+  tags:
+    - backend
+    - frontend
+    - static
+
+# Python dependencies
+
+- name: install latest setuptools
+  pip: name=setuptools state=latest
+       virtualenv="{{ venv_path }}"
+  tags:
+    - backend
+
+- name: install latest pip
+  pip: name=pip state=latest
+       virtualenv="{{ venv_path }}"
+  tags:
+    - backend
+
+- name: install requirements
+  pip: requirements="/srv/src/requirements.txt"
+       virtualenv="{{ venv_path }}"
+  tags:
+    - backend
+
+- name: "!! uninstall caffeine !!"
+  shell: "/srv/venv/bin/pip uninstall -y caffeine"
+  args:
+    chdir: "/srv/src"
+  ignore_errors: yes
+
+- name: "!! install caffeine !!"
+  shell: "/srv/venv/bin/python setup.py install"
+  notify:
+    - restart python-app
+    - restart id3-workers
+  args:
+    chdir: "/srv/src"
+
+- name: install gunicorn upstart script
+  template: src=alembic.ini
+    dest="/srv/src/alembic.ini"
+    owner=root group=root mode=644
+  notify: restart python-app
+  tags:
+    - backend
+
+
+- name: install ID3 Extractor workers upstart
+  template: src=id3-workers.upstart
+    dest="/etc/init/id3-workers.conf"
+    owner=root group=root mode=644
+  notify: restart id3-workers
+  tags:
+    - backend
+
+
+- name: ensure upload folder
+  file: path="{{ caffeine_upload_path }}" state=directory mode=0755

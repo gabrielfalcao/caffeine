@@ -1,0 +1,26 @@
+---
+- hosts:
+    - caffeine.co
+
+  sudo: yes
+  user: root
+  vars:
+    restund_public_ip_address: 45.55.107.216
+    root_domain: caffeine.co
+    local_repository_root_path: "{{ playbook_dir }}/.."
+
+    system_max_file_descriptors: 65536
+    ulimit_config:
+      - {domain: '*', type: soft, item: nofile, value: 65536}
+      - {domain: '*', type: hard, item: nofile, value: 65536}
+      - {domain: 'root', type: soft, item: nofile, value: 65536}
+      - {domain: 'root', type: hard, item: nofile, value: 65536}
+
+  vars_files:
+    - "caffeine-vault.yml"
+
+  roles:
+    - ulimit
+    - base
+    - ssl
+    - web

@@ -1,0 +1,44 @@
+---
+# Handlers for Nginx notifications.
+
+- name: stop nginx
+  service: >
+    name=nginx
+    state=stopped
+
+- name: start nginx
+  service: >
+    name=nginx
+    state=started
+    enabled=yes
+
+- name: restart nginx
+  service: >
+    name=nginx
+    state=restarted
+    enabled=yes
+
+# Handlers for Python-app notifications.
+
+- name: stop python-app
+  service: >
+    name=python-app
+    state=stopped
+
+- name: start python-app
+  service: >
+    name=python-app
+    state=started
+    enabled=yes
+
+- name: restart python-app
+  service: >
+    name=python-app
+    state=restarted
+    enabled=yes
+
+- name: restart id3-workers
+  service: >
+    name=id3-workers
+    state=restarted
+    enabled=yes

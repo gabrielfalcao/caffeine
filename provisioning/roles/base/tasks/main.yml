@@ -1,0 +1,48 @@
+- name: "[webrtc stack] installing dependencies"
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items:
+    - ntp
+    - nginx
+    - upstart
+    - telnet
+    - nodejs
+    - git
+    - vim
+    - lynx
+    - supervisor
+    - curl
+    - git-svn
+    - ca-certificates
+    - build-essential
+    - python
+    - python-mysqldb
+    - htop
+    - subversion
+    - wget
+    - pkg-config
+    - libgtk2.0-dev
+    - libxtst-dev
+    - libxss-dev
+    - libffi-dev
+    - libssl-dev
+    - libgcrypt11-dev
+    - libpci-dev
+    - libxtst-dev
+    - libgnome-keyring-dev
+    - libdrm-dev
+    - libudev-dev
+    - libev-dev
+    - libnss3
+    - libgconf2-dev
+    - libnss3-dev
+    - libasound2-dev
+    - libpulse-dev
+    - redis-server
+    - redis-tools
+    - mysql-client
+    - mysql-server
+    - postfix
+    - postfix-mysql
+
+- name: "[webrtc stack] starting ntpd"
+  service: name=ntp state=started enabled=yes

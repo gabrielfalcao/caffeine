@@ -1,0 +1,4 @@
+- include: base.yml tags=web,deps
+- include: nginx.yml tags=web,nginx
+- include: wsgi.yml tags=web,wsgi
+- include: mysql.yml tags=web,mysql

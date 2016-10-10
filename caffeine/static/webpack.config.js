@@ -1,0 +1,27 @@
+var path = require("path");
+var webpack = require("webpack");
+
+module.exports = {
+    entry: {
+        "caffeine.webapp": path.join(__dirname, 'frontend-src', 'main.jsx'),
+        "caffeine.admin": path.join(__dirname, 'admin-src', 'main.jsx'),
+    },
+    output: {
+        filename: "dist/[name].js"
+    },
+    module: {
+        loaders: [
+            { test: /\.jsx?$/,
+              exclude: /node_modules/,
+              loader: "babel-loader"
+            },
+            { test: /\.css$/, loader: "style!css" },
+            { test: /\.scss$/, loader: "style!css!sass" },
+            { test: /\.less$/, loader: "style!css!less" },
+            { test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9\.=]+)?$/,
+              loader: 'file-loader' },
+            { test: /\.(gif|png|jpg|jpeg)?$/,
+              loader: 'url-loader' }
+        ]
+    }
+};
