@@ -3,8 +3,7 @@ var webpack = require("webpack");
 
 module.exports = {
     entry: {
-        "caffeine.webapp": path.join(__dirname, 'frontend-src', 'main.jsx'),
-        "caffeine.admin": path.join(__dirname, 'admin-src', 'main.jsx'),
+        "caffeine.webapp": path.join(__dirname, 'frontend-src', 'main.jsx')
     },
     output: {
         filename: "dist/[name].js"
