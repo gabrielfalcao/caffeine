@@ -1,49 +1,31 @@
 # caffeine
 
-## Table of contents
+## Preparing your environment
 
-* [Infrastructure](#Infrastructure)
-* [Backend](#Backend)
 
-## Infrastructure:
+#### 1. Ensure you have nodejs and python 2.7.x installed
 
-### DNS
 
-```
-@	    A   	45.55.107.216 3600
-mail	MX 37	caffeine.co   60
-```
+#### 2. Install nodejs dependencies:
 
-### Stack
 
-* free tls certs from starcom :P
-* nginx
-* postfix
-* redis
-* mysql
-* prosody
-* restund
-* gunicorn
+```bash
+$ make js-deps
 
-### Deploying
+# or
 
-```
-ansible-playbook --vault-password-file=$(HOME)/.ansible-vault.caffeine -i provisioning/inventory provisioning/site.yml
+$ cd caffeine/static && npm install
 ```
 
-## Backend
 
-* Python app under `./caffeine`
-* Routes:
- * `https://caffeine.co/login`
+#### 3. Install python dependencies:
 
 
-## SSL:
+```bash
+$ make python-deps
 
-```
-caffeine.co
-mail.caffeine.co
-files.caffeine.co
-api.wavamanda.la
-io.caffeine.co
+# or
+
+$ pip install -r development.txt
+$ python setup.py develop
 ```
