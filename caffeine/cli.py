@@ -8,24 +8,17 @@ import logging
 import argparse
 import warnings
 import coloredlogs
-import multiprocessing
 
-from plant import Node
 from caffeine import settings
-from caffeine.models import Track, User
-from caffeine.workers import get_worker_class_by_label
 from caffeine.application import server
-from caffeine.util import generate_encryption_key
-from caffeine.util import get_upload_node
 
 
 LOGO = '''
-\033[1;30m _______                    \033[1;34m _______               __
-\033[1;30m|_     _|.--.--.-----.-----.\033[1;34m|_     _|.---.-.-----.|  |--.
-\033[1;30m  |   |  |  |  |     |  -__|\033[1;34m  |   |  |  _  |     ||    <
-\033[1;30m  |___|  |_____|__|__|_____|\033[1;34m  |___|  |___._|__|__||__|__|
-
-{0}\033[0m'''
+ ______         ___   ___         __
+|      |.---.-.'  _|.'  _|.-----.|__|.-----.-----.
+|   ---||  _  |   _||   _||  -__||  ||     |  -__|
+|______||___._|__|  |__|  |_____||__||__|__|_____|
+'''
 
 
 def args_include_debug_or_info():
@@ -39,56 +32,6 @@ def get_remaining_sys_argv():
         argv = sys.argv[2:]
 
     return argv
-
-
-def caffeine_scan():
-    parser = argparse.ArgumentParser(
-        prog='caffeine scan',
-        description='scans a given folder for music files and import them')
-
-    parser.add_argument('path', help='the label of the worker')
-
-    args = parser.parse_args(get_remaining_sys_argv())
-    node = Node(args.path)
-    if not node.exists:
-        logging.critical('path does not exist: {0}'.format(args.path))
-        raise SystemExit(1)
-
-    upload_node = get_upload_node()
-    bot = User.get_bot_user()
-    for music_node in node.find_with_regex('.[Mm][Pp]3'):
-        existing_track = Track.find_one_by(download_path__contains=music_node.basename)
-        if existing_track:
-            logging.info('{0} already imported'.format(existing_track))
-            continue
-
-        final_path = upload_node.join(music_node.basename)
-        with open(final_path, 'wb') as fd:
-            fd.write(open(music_node.path, 'rb').read())
-
-        track = Track.create(
-            user_id=bot.id,
-            download_path=final_path
-        )
-        logging.info('successfully imported track {0}'.format(track))
-
-
-def caffeine_run_workers():
-    parser = argparse.ArgumentParser(
-        prog='caffeine workers',
-        description='execute background workers')
-
-    parser.add_argument('name', help='the label of the worker')
-    parser.add_argument('--concurrency', default=multiprocessing.cpu_count(), type=int, help='how many coroutines')
-    parser.add_argument('--pull-bind-address', required=True, help='the zmq address of the pull bind')
-
-    args = parser.parse_args(get_remaining_sys_argv())
-
-    WorkerClass = get_worker_class_by_label(args.name)
-
-    worker = WorkerClass(args.concurrency, args.pull_bind_address)
-    print LOGO.format('\033[1;30mWorkers: \033[1;32m{0}'.format(worker))
-    worker.run()
 
 
 def caffeine_run_web():
@@ -109,22 +52,9 @@ def caffeine_run_web():
     )
 
 
-def caffeine_generate_key():
-    parser = argparse.ArgumentParser(
-        prog='caffeine generate-key',
-        description='generates a fernet key for token encryption')
-
-    parser.parse_args(get_remaining_sys_argv())
-
-    print generate_encryption_key()
-
-
 def main():
     HANDLERS = {
-        'workers': caffeine_run_workers,
         'web': caffeine_run_web,
-        'generate-key': caffeine_generate_key,
-        'scan': caffeine_scan,
     }
 
     parser = argparse.ArgumentParser(prog='caffeine')

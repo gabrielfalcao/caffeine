@@ -6,16 +6,12 @@ import os
 import json
 import logging
 import traceback
-import email.message
 
 from flask import Flask, Response, request, redirect, g
 from flask_googlelogin import GoogleLogin
 
 from caffeine import settings
-from caffeine.mailing import EmailMessage
 from caffeine.util import configure_logging
-from caffeine.util import get_symmetrical_cypher
-from caffeine.workers import WorkerClient
 
 COLORED_LOGS_LEVEL = os.environ.get('COLORED_LOGS_LEVEL')
 
@@ -38,13 +34,8 @@ class Application(Flask):
         self.secret_key = os.environ.get('SECRET_KEY')
         self.google = GoogleLogin(self)
         self.secret_key = settings.SECRET_KEY
-        self.workers = WorkerClient(settings.WORKER_ADDRESS)
 
     def json_handle_weird(self, obj):
-        if isinstance(obj, email.message.Message):
-            return EmailMessage(obj).to_dict()
-
-        logging.warning("failed to serialize %s", obj)
         return bytes(obj)
 
     def json_response(self, data, code=200, headers={}):
