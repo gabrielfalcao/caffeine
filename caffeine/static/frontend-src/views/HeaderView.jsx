@@ -4,9 +4,6 @@ import {connect} from 'react-redux';
 
 import APIClient from '../networking.jsx';
 
-var Logo = require("./navbar-logo.png");
-
-
 class HeaderView extends React.Component {
     propTypes: {
         user: React.PropTypes.object,
@@ -14,21 +11,8 @@ class HeaderView extends React.Component {
     constructor() {
         super();
         this.api = new APIClient();
-        this.refresh = this.refresh.bind(this);
-    }
-    refresh(){
-        const {store} = this.context;
-        this.api.authenticate((result, err) => {
-            if (!err) {
-                store.dispatch({
-                    user: result,
-                    type: "SET_USER",
-                })
-            }
-        });
     }
     componentWillMount(){
-        this.refresh();
     }
     render() {
         const {user} = this.props;
@@ -36,20 +20,10 @@ class HeaderView extends React.Component {
             <Navbar>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a href="/"><img src={Logo}/></a>
+                        <a href="/">CAFFEINE</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
-                {this.props.navigation ? <Navbar.Collapse>
-                 <Nav pullRight>
-                 <NavItem href="#/upload">Upload Tracks</NavItem>
-                 <NavDropdown title={user.name} id="basic-nav-dropdown">
-                 <MenuItem href="#/profile">Profile</MenuItem>
-                 <MenuItem href="/logout">Logout</MenuItem>
-                 </NavDropdown>
-                 </Nav>
-
-                 </Navbar.Collapse> : null}
             </Navbar>
         )
     }
